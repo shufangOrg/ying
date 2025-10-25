@@ -235,6 +235,7 @@
       var actualWidth = maxRight;
       var containerWidth = grid.parentElement.offsetWidth;
       var offset = 0;
+      var isMobile = window.innerWidth <= 600;
       
       if (actualWidth > 0 && actualWidth < containerWidth) {
         offset = Math.floor((containerWidth - actualWidth) / 2);
@@ -244,12 +245,21 @@
       }
       
       if (titleElem) {
-        titleElem.style.left = offset + 'px';
+        if (isMobile) {
+          titleElem.style.left = '0px';
+        } else {
+          titleElem.style.left = offset + 'px';
+        }
       }
       
       if (footerElem) {
-        footerElem.style.width = actualWidth + 'px';
-        footerElem.style.marginLeft = offset + 'px';
+        if (isMobile) {
+          footerElem.style.width = '100%';
+          footerElem.style.marginLeft = '0px';
+        } else {
+          footerElem.style.width = actualWidth + 'px';
+          footerElem.style.marginLeft = offset + 'px';
+        }
       }
     }
     
