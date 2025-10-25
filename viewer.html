@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8">
+<html lang="zh-CN"><head><meta charset="utf-8">
 <title>我们的书房</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,user-scalable=yes">
 <style>
-  body { font-family: sans-serif; background:#f0f0f0; margin:0; padding:0; text-align:center; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background:#f0f0f0; margin:0; padding:0; text-align:center; }
   #top-bar { display:flex; justify-content:flex-end; align-items:center; padding:10px 20px; }
   #progress { margin-right:auto; font-weight:bold; color:#333; }
   #top-bar a { text-decoration:none; color:#3366cc; font-weight:bold; margin-left:10px; }
@@ -12,10 +12,15 @@
   #main-img { display:block; max-width:90vw; max-height:90vh; width:auto; height:auto; border-radius:6px; opacity:0; transition:opacity 0.5s ease; }
   .arrow { position:absolute; top:0; bottom:0; width:30%; height:100%; font-size:3em; color:white; display:flex; justify-content:center; align-items:center; opacity:0; cursor:pointer; user-select:none; transition:opacity 0.35s ease, background 0.35s ease; pointer-events:none; }
   #arrow-left { left:0; justify-content:flex-start; padding-left:12px; border-top-left-radius:6px; border-bottom-left-radius:6px; background:linear-gradient(to right, rgba(0,0,0,0.25), rgba(0,0,0,0)); }
-  #arrow-left:hover { background:linear-gradient(to right, rgba(0,0,0,0.4), rgba(0,0,0,0)); }
   #arrow-right { right:0; justify-content:flex-end; padding-right:12px; border-top-right-radius:6px; border-bottom-right-radius:6px; background:linear-gradient(to left, rgba(0,0,0,0.25), rgba(0,0,0,0)); }
-  #arrow-right:hover { background:linear-gradient(to left, rgba(0,0,0,0.4), rgba(0,0,0,0)); }
-  #img-container:hover .arrow { opacity:1; pointer-events:auto; }
+  @media (hover: hover) {
+    #arrow-left:hover { background:linear-gradient(to right, rgba(0,0,0,0.4), rgba(0,0,0,0)); }
+    #arrow-right:hover { background:linear-gradient(to left, rgba(0,0,0,0.4), rgba(0,0,0,0)); }
+    #img-container:hover .arrow { opacity:1; pointer-events:auto; }
+  }
+  @media (hover: none) {
+    .arrow { opacity:0.7; pointer-events:auto; }
+  }
   footer { margin-top:30px; font-size:0.85em; color:#666; }
 </style>
 </head><body>

@@ -1,31 +1,30 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,user-scalable=yes">
 <title>我们的书房</title>
 <style>
-  body { font-family: sans-serif; background:#f7f7f7; margin:0; padding:20px; box-sizing:border-box; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background:#f7f7f7; margin:0; padding:20px; -webkit-font-smoothing: antialiased; }
   .container { max-width:1400px; margin:0 auto; }
-  h1 { margin:0 0 20px 0; text-align:left; position:relative; transition:left 0.3s ease; }
-  .grid { max-width:100%; margin:0 auto; position:relative; }
+  h1 { margin:0 0 20px 0; text-align:left; position:relative; transition:left 0.3s ease; font-size:24px; }
+  .grid { max-width:100%; margin:0 auto; position:relative; min-height:200px; }
   .grid-sizer, .grid-item { width:20%; }
-  .grid-item { margin-bottom:12px; position:relative; overflow:hidden; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.08); background:#fff; }
-  .grid-item a { display:block; }
-  .grid-item img { width:100%; height:auto; display:block; object-fit:cover; opacity:0; transition:opacity 0.45s ease, transform 0.45s ease; transform:translateY(6px); }
+  .grid-item { margin-bottom:12px; position:relative; overflow:hidden; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.08); background:#fff; padding:4px; }
+  .grid-item a { display:block; text-decoration:none; }
+  .grid-item img { width:100%; height:auto; display:block; opacity:0; transition:opacity 0.45s ease, transform 0.45s ease; transform:translateY(6px); }
   .grid-item img.loaded { opacity:1; transform:translateY(0); }
   .grid-item::after { content:''; position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(200,200,200,0); transition:background 0.25s ease; pointer-events:none; }
-  .grid-item:hover::after { background:rgba(200,200,200,0.28); }
+  .grid-item:active::after { background:rgba(200,200,200,0.28); }
+  @media (hover: hover) { .grid-item:hover::after { background:rgba(200,200,200,0.28); } }
   .footer { margin-top:20px; text-align:right; color:#666; font-size:0.9em; transition:width 0.3s ease, margin-left 0.3s ease; }
   @media (max-width:1200px){ .grid-sizer, .grid-item { width:25%; } }
   @media (max-width:900px){ .grid-sizer, .grid-item { width:33.333%; } }
-  @media (max-width:600px){ .grid-sizer, .grid-item { width:50%; } h1 { text-align:center; } .footer { text-align:center; } }
-  /* Spinner overlay */
+  @media (max-width:600px){ .grid-sizer, .grid-item { width:50%; } h1 { text-align:center; font-size:20px; } .footer { text-align:center; } }
   #spinner-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.92); display:flex; justify-content:center; align-items:center; z-index:9999; transition:opacity 0.6s ease; }
   #spinner { width:48px; height:48px; border:6px solid #e0e0e0; border-top-color:#3498db; border-radius:50%; animation:spin 1s linear infinite; }
   @keyframes spin { 100% { transform:rotate(360deg); } }
   #spinner-overlay.fade-out { opacity:0; pointer-events:none; }
 </style>
-<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
-<script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
 </head><body>
 <div id="spinner-overlay" aria-hidden="true"><div id="spinner" role="status" aria-label="Loading"></div></div>
 <div class="container">
@@ -185,25 +184,185 @@
 </div>
 <div class="footer">@ 一个人的书房</div>
 </div>
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function(){
-  const grid = document.querySelector('.grid');
-  const spinner = document.getElementById('spinner-overlay');
-  const msnry = new Masonry(grid, { itemSelector: '.grid-item', columnWidth: '.grid-sizer', percentPosition: true, gutter: 12, originLeft: true });
-  const titleElem = document.querySelector('h1');
-  const footerElem = document.querySelector('.footer');
-  function centerGrid(){ const items = grid.querySelectorAll('.grid-item'); if(items.length === 0) return; let maxRight = 0; items.forEach(item => { const right = item.offsetLeft + item.offsetWidth; if(right > maxRight) maxRight = right; }); const actualWidth = maxRight; const containerWidth = grid.parentElement.offsetWidth; let offset = 0; if(actualWidth > 0 && actualWidth < containerWidth){ offset = Math.floor((containerWidth - actualWidth) / 2); grid.style.left = offset + 'px'; } else { grid.style.left = '0px'; } if(titleElem){ titleElem.style.left = offset + 'px'; } if(footerElem){ footerElem.style.width = actualWidth + 'px'; footerElem.style.marginLeft = offset + 'px'; } }
-  window.addEventListener('resize', ()=> { msnry.layout(); setTimeout(centerGrid, 100); });
-  const imgs = Array.from(document.querySelectorAll('.grid img'));
-  function markLoaded(img){ img.classList.add('loaded'); setTimeout(()=> { msnry.layout(); centerGrid(); }, 40); }
-  function loadImage(img){ if (img.dataset.src){ img.src = img.dataset.src; img.removeAttribute('data-src'); img.addEventListener('load', ()=> markLoaded(img), { once:true }); img.addEventListener('error', ()=> { img.classList.add('loaded'); setTimeout(()=> { msnry.layout(); centerGrid(); },40); }, { once:true }); } else if (img.complete) markLoaded(img); }
-  if ('IntersectionObserver' in window){
-    const io = new IntersectionObserver((entries, obs) => { entries.forEach(entry => { if (entry.isIntersecting){ loadImage(entry.target); obs.unobserve(entry.target); } }); }, { rootMargin: '200px 0px 200px 0px', threshold: 0.01 });
-    imgs.forEach(img => { if (img.complete && !img.dataset.src) markLoaded(img); else io.observe(img); });
-  } else { imgs.forEach(img => loadImage(img)); }
-  imagesLoaded(grid, { background: true }, function() { msnry.layout(); setTimeout(centerGrid, 50); spinner.classList.add('fade-out'); setTimeout(()=> { try { spinner.remove(); } catch(e) {} }, 700); });
-  // ensure cached images are shown
-  imgs.forEach(img => { if (!img.dataset.src && img.complete) markLoaded(img); });
-});
+(function() {
+  'use strict';
+  
+  var msnry = null;
+  var isInitialized = false;
+  
+  function initGallery() {
+    if (isInitialized) return;
+    
+    var grid = document.querySelector('.grid');
+    var spinner = document.getElementById('spinner-overlay');
+    var titleElem = document.querySelector('h1');
+    var footerElem = document.querySelector('.footer');
+    
+    if (!grid || !window.Masonry || !window.imagesLoaded) {
+      setTimeout(initGallery, 100);
+      return;
+    }
+    
+    isInitialized = true;
+    
+    try {
+      msnry = new Masonry(grid, { 
+        itemSelector: '.grid-item', 
+        columnWidth: '.grid-sizer', 
+        percentPosition: true, 
+        gutter: 12, 
+        originLeft: true,
+        transitionDuration: '0.3s'
+      });
+    } catch(e) {
+      console.error('Masonry init error:', e);
+      return;
+    }
+    
+    function centerGrid() {
+      var items = grid.querySelectorAll('.grid-item');
+      if (items.length === 0) return;
+      
+      var maxRight = 0;
+      items.forEach(function(item) {
+        var right = item.offsetLeft + item.offsetWidth;
+        if (right > maxRight) maxRight = right;
+      });
+      
+      var actualWidth = maxRight;
+      var containerWidth = grid.parentElement.offsetWidth;
+      var offset = 0;
+      
+      if (actualWidth > 0 && actualWidth < containerWidth) {
+        offset = Math.floor((containerWidth - actualWidth) / 2);
+        grid.style.left = offset + 'px';
+      } else {
+        grid.style.left = '0px';
+      }
+      
+      if (titleElem) {
+        titleElem.style.left = offset + 'px';
+      }
+      
+      if (footerElem) {
+        footerElem.style.width = actualWidth + 'px';
+        footerElem.style.marginLeft = offset + 'px';
+      }
+    }
+    
+    var resizeTimer;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function() {
+        if (msnry) {
+          msnry.layout();
+          setTimeout(centerGrid, 100);
+        }
+      }, 250);
+    });
+    
+    var imgs = Array.from(document.querySelectorAll('.grid img'));
+    var loadedCount = 0;
+    
+    function markLoaded(img) {
+      if (!img.classList.contains('loaded')) {
+        img.classList.add('loaded');
+        loadedCount++;
+        
+        setTimeout(function() {
+          if (msnry) {
+            msnry.layout();
+            centerGrid();
+          }
+        }, 50);
+      }
+    }
+    
+    function loadImage(img) {
+      if (img.dataset.src) {
+        var src = img.dataset.src;
+        img.removeAttribute('data-src');
+        
+        img.addEventListener('load', function() {
+          markLoaded(img);
+        }, { once: true });
+        
+        img.addEventListener('error', function() {
+          img.classList.add('loaded');
+          if (msnry) {
+            msnry.layout();
+            centerGrid();
+          }
+        }, { once: true });
+        
+        img.src = src;
+      } else if (img.complete && img.naturalHeight > 0) {
+        markLoaded(img);
+      }
+    }
+    
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function(entries, observer) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            loadImage(entry.target);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { 
+        rootMargin: '300px 0px 300px 0px', 
+        threshold: 0.01 
+      });
+      
+      imgs.forEach(function(img) {
+        if (img.complete && !img.dataset.src && img.naturalHeight > 0) {
+          markLoaded(img);
+        } else {
+          io.observe(img);
+        }
+      });
+    } else {
+      imgs.forEach(function(img) {
+        loadImage(img);
+      });
+    }
+    
+    imagesLoaded(grid, { background: true }, function() {
+      if (msnry) {
+        msnry.layout();
+        setTimeout(function() {
+          centerGrid();
+          spinner.classList.add('fade-out');
+          setTimeout(function() {
+            try {
+              if (spinner && spinner.parentNode) {
+                spinner.parentNode.removeChild(spinner);
+              }
+            } catch(e) {}
+          }, 700);
+        }, 100);
+      }
+    });
+    
+    imgs.forEach(function(img) {
+      if (!img.dataset.src && img.complete && img.naturalHeight > 0) {
+        markLoaded(img);
+      }
+    });
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initGallery);
+  } else {
+    initGallery();
+  }
+  
+  window.addEventListener('load', function() {
+    setTimeout(initGallery, 100);
+  });
+})();
 </script>
 </body></html>
